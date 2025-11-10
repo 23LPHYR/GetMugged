@@ -137,12 +137,7 @@ nav a:hover { color: #ffffff; }
     gap: 8px;
 }
 
-.mini-cart-item img {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    border-radius: 6px;
-}
+
 
 .mini-cart-btn {
     display: block;
@@ -248,3 +243,10 @@ nav a:hover { color: #ffffff; }
     min-height: 100vh;
     padding-top: 40px;
 }
+
+.payment-total {
+    color: #3b2f2f; /* dark coffee text */
+    text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff,
+    1px -1px 0 #fff, -1px 1px 0 #fff;
+}
+
