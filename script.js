@@ -20,11 +20,10 @@ function displayCart() {
 
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
     if (cart.length === 0) {
-        container.innerHTML = `<p class="cart-empty"; style="text-shadow: 1px 1px 0 black, -1px -1px 0 black,
+        container.innerHTML = `<p class="cart-empty" style="text-shadow: 1px 1px 0 black, -1px -1px 0 black,
         1px -1px 0 black, -1px 1px 0 black;">Your cart is empty.</p>`;
         return;
     }
-
 
     container.innerHTML = "";
     let total = 0;
@@ -48,6 +47,7 @@ function displayCart() {
 }
 
 
+
 function displayMiniCart() {
     const mini = document.getElementById("mini-cart");
     if (!mini) return;
@@ -61,11 +61,9 @@ function displayMiniCart() {
 
     mini.innerHTML = "<h3 class='mini-cart-title'>Your Cart</h3>";
 
-
     cart.forEach((item, index) => {
         mini.innerHTML += `
         <div class="mini-cart-item">
-        <img src="${item.img}">
         <p>${item.name} <span style="opacity:0.7;">x${item.quantity}</span></p>
         <button class="mini-remove" onclick="removeItem(${index}); displayMiniCart();">x</button>
         </div>
@@ -74,6 +72,7 @@ function displayMiniCart() {
 
     mini.innerHTML += `<a href="cart.html" class="mini-cart-btn">Go to Cart</a>`;
 }
+
 
 
 document.addEventListener("DOMContentLoaded", displayMiniCart);
@@ -100,7 +99,9 @@ document.getElementById("checkout-btn")?.addEventListener("click", () => {
     modal.innerHTML = `
     <div class="payment-box">
     <h2>Checkout</h2>
-    <p>Total Amount: <strong>₹${total}</strong></p>
+    <p style="text-shadow: 1px 1px 0 black, -1px -1px 0 black,
+    1px -1px 0 black, -1px 1px 0 black;">Total Amount: <strong class="payment-total">₹${total}</strong></p>
+
     <button class="pay-now-btn">Pay Now</button>
     <button class="close-pay-btn">Cancel</button>
     </div>
@@ -117,11 +118,18 @@ document.getElementById("checkout-btn")?.addEventListener("click", () => {
             modal.querySelector(".payment-box").innerHTML = `
             <h2>✅ Payment Successful!</h2>
             <p>Your mugs are on the way.</p>
-            <button class="close-pay-btn">Close</button>
+            <button class="close-pay-btn" id="final-close-btn">Close</button>
             `;
+
             localStorage.removeItem("cart");
             displayCart();
             displayMiniCart();
+
+            // ✅ The important part
+            document.getElementById("final-close-btn").addEventListener("click", () => {
+                modal.remove();
+            });
+
         }, 2000);
     });
 
