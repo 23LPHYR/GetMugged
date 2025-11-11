@@ -1,92 +1,160 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Mugs - GetMugged</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body class="products-page-bg">
+
+// Ensure login state exists
+if (localStorage.getItem("loggedIn") === null) {
+    localStorage.setItem("loggedIn", "false");
+}
 
 
-<header>
-  <h1>GetMugged</h1>
-  <nav>
-  <a href="index.html">Home</a>
-  <a href="products.html">Mugs</a>
-  <a href="cart.html">Cart</a>
-  <span id="user-area"></span>
-</nav>
-
-</header>
-
-<h2 class="page-title" style="text-align: center;">: : : : : Select Your Mug : : : : :</h2>
-<div id="mini-cart" class="mini-cart"></div>
-
-<div class="products-container">
-
-  <div class="product-card">
-    <img src="images/classic.jpg">
-    <h3>Classic Coffee Mug</h3><p class="price">₹199</p>
-    <button onclick="addToCart('Classic Coffee Mug',199,'images/classic.jpg')">Add to Cart</button>
-  </div>
-
-  <div class="product-card">
-    <img src="images/cafe.jpg">
-    <h3>Café Lover Mug</h3><p class="price">₹249</p>
-    <button onclick="addToCart('Café Lover Mug',249,'images/cafe.jpg')">Add to Cart</button>
-  </div>
-
-  <div class="product-card">
-    <img src="images/rustic.jpg">
-    <h3>Rustic Brown Mug</h3><p class="price">₹299</p>
-    <button onclick="addToCart('Rustic Brown Mug',299,'images/rustic.jpg')">Add to Cart</button>
-  </div>
-
-  <div class="product-card">
-    <img src="images/matteblack.jpg">
-    <h3>Matte Black Mug</h3><p class="price">₹349</p>
-    <button onclick="addToCart('Matte Black Mug',349,'images/matteblack.jpg')">Add to Cart</button>
-  </div>
-
-  <div class="product-card">
-    <img src="images/frost.jpg">
-    <h3>Frost White Mug</h3><p class="price">₹189</p>
-    <button onclick="addToCart('Frost White Mug',189,'images/frost.jpg')">Add to Cart</button>
-  </div>
-
-  <div class="product-card">
-    <img src="images/latte.jpg">
-    <h3>Latte Art Mug</h3><p class="price">₹259</p>
-    <button onclick="addToCart('Latte Art Mug',259,'images/latte.jpg')">Add to Cart</button>
-  </div>
-
-  <div class="product-card">
-    <img src="images/cloud.jpg">
-    <h3>Cappuccino Cloud Mug</h3><p class="price">₹279</p>
-    <button onclick="addToCart('Cappuccino Cloud Mug',279,'images/cloud.jpg')">Add to Cart</button>
-  </div>
-
-  <div class="product-card">
-    <img src="images/vintage.jpg">
-    <h3>Vintage Ceramic Mug</h3><p class="price">₹329</p>
-    <button onclick="addToCart('Vintage Ceramic Mug',329,'images/vintage.jpg')">Add to Cart</button>
-  </div>
-
-  <div class="product-card">
-    <img src="images/caramel.jpg">
-    <h3>Caramel Swirl Mug</h3><p class="price">₹259</p>
-    <button onclick="addToCart('Caramel Swirl Mug',259,'images/caramel.jpg')">Add to Cart</button>
-  </div>
-
-  <div class="product-card">
-    <img src="images/choco.jpg">
-    <h3>Choco Stone Mug</h3><p class="price">₹289</p>
-    <button onclick="addToCart('Choco Stone Mug',289,'images/choco.jpg')">Add to Cart</button>
-  </div>
-
-</div>
 
 
-<script src="script.js"></script>
-</body>
-</html>
+function addToCart(name, price, img) {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    let item = cart.find(product => product.name === name);
+
+    if (item) {
+        item.quantity += 1;
+    } else {
+        cart.push({ name, price, img, quantity: 1 });
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    displayMiniCart();
+}
+
+function displayCart() {
+    const container = document.getElementById("cart-container");
+    if (!container) return;
+
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    if (cart.length === 0) {
+        container.innerHTML = `<p class="cart-empty">Your cart is empty.</p>`;
+        return;
+    }
+
+    container.innerHTML = "";
+    let total = 0;
+
+    cart.forEach((item, index) => {
+        total += item.price * item.quantity;
+
+        container.innerHTML += `
+        <div class="cart-item">
+        <img src="${item.img}">
+        <div class="cart-info">
+        <h3>${item.name} <span style="opacity:0.8;">x${item.quantity}</span></h3>
+        <p>₹${item.price * item.quantity}</p>
+        </div>
+        <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
+        </div>`;
+    });
+
+    container.innerHTML += `<h2 class="total">Total: ₹${total}</h2>`;
+}
+
+function displayMiniCart() {
+    const mini = document.getElementById("mini-cart");
+    if (!mini) return;
+
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    if (cart.length === 0) {
+        mini.innerHTML = "<p>No items yet.</p>";
+        return;
+    }
+
+    mini.innerHTML = "<h3 class='mini-cart-title'>Your Cart</h3>";
+
+    cart.forEach((item, index) => {
+        mini.innerHTML += `
+        <div class="mini-cart-item">
+        <p>${item.name} <span>x${item.quantity}</span></p>
+        <button class="mini-remove" onclick="removeItem(${index}); displayMiniCart();">x</button>
+        </div>
+        `;
+    });
+
+    mini.innerHTML += `<a href="cart.html" class="mini-cart-btn">Go to Cart</a>`;
+}
+
+document.addEventListener("DOMContentLoaded", displayMiniCart);
+document.addEventListener("DOMContentLoaded", displayCart);
+
+function removeItem(index) {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart.splice(index, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    displayCart();
+    displayMiniCart();
+}
+
+// ✅ Login requirement before checkout
+document.getElementById("checkout-btn")?.addEventListener("click", () => {
+    if (localStorage.getItem("loggedIn") !== "true") {
+        alert("Please login to continue checkout.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    if (cart.length === 0) return;
+
+    let total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+    const modal = document.createElement("div");
+    modal.className = "payment-modal";
+    modal.innerHTML = `
+    <div class="payment-box">
+    <h2>Checkout</h2>
+    <p>Total Amount: <strong>₹${total}</strong></p>
+    <button class="pay-now-btn">Pay Now</button>
+    <button class="close-pay-btn">Cancel</button>
+    </div>`;
+    document.body.appendChild(modal);
+
+    modal.querySelector(".pay-now-btn").addEventListener("click", () => {
+        modal.querySelector(".payment-box").innerHTML = `
+        <h2>Processing Payment...</h2><p>Please wait</p>`;
+
+        setTimeout(() => {
+            modal.querySelector(".payment-box").innerHTML = `
+            <h2>✅ Payment Successful!</h2><p>Your mugs are on the way.</p>
+            <button class="close-pay-btn" id="final-close-btn">Close</button>`;
+
+            localStorage.removeItem("cart");
+            displayCart();
+            displayMiniCart();
+
+            document.getElementById("final-close-btn").onclick = () => modal.remove();
+        }, 2000);
+    });
+
+    modal.querySelector(".close-pay-btn").onclick = () => modal.remove();
+});
+
+// ✅ Header Login / Logout UI
+function updateUserArea() {
+    const userArea = document.getElementById("user-area");
+    if (!userArea) return;
+
+    const loggedIn = localStorage.getItem("loggedIn") === "true";
+    const username = localStorage.getItem("username");
+
+    if (loggedIn && username) {
+        userArea.innerHTML = `
+        <span class="welcome-user">Welcome, ${username}</span>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+        `;
+    } else {
+        userArea.innerHTML = `<a href="login.html">Login</a>`;
+    }
+}
+
+function logout() {
+    localStorage.setItem("loggedIn", "false");
+    displayMiniCart();
+    updateUserArea();
+    window.location.href = "index.html";
+}
+
+document.addEventListener("DOMContentLoaded", updateUserArea);
