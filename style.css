@@ -250,3 +250,50 @@ nav a:hover { color: #ffffff; }
     1px -1px 0 #fff, -1px 1px 0 #fff;
 }
 
+
+
+
+
+
+.auth-box {
+    width: 320px;
+    margin: 120px auto;
+    background: #3b2f2f;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.5);
+}
+
+.auth-box input {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+}
+
+
+
+
+.welcome-user {
+    margin-right: 12px;
+    font-weight: bold;
+    color: #e6d5c3;
+}
+
+.logout-btn {
+    background: #b44;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.logout-btn:hover {
+    background: #ff6b6b;
+}
