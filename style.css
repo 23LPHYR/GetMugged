@@ -297,3 +297,127 @@ nav a:hover { color: #ffffff; }
 .logout-btn:hover {
     background: #ff6b6b;
 }
+
+
+/* Cart + Checkout Layout */
+.cart-layout {
+    display: flex;
+    gap: 30px;
+    padding: 40px 60px;
+    align-items: flex-start;
+}
+
+.cart-section {
+    flex: 3;
+}
+
+.checkout-section {
+    flex: 2;
+    background: #3b2f2f;
+    padding: 20px 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.5);
+}
+
+.section-heading {
+    margin-bottom: 16px;
+    font-size: 20px;
+    letter-spacing: 0.5px;
+}
+
+/* Cart items inside cart page */
+#cart-container {
+    background: rgba(0, 0, 0, 0.35);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    background: #3b2f2f;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+}
+
+.cart-info h3 {
+    margin: 0 0 4px 0;
+}
+
+.remove-btn {
+    margin-left: auto;
+    background: #b44;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.remove-btn:hover {
+    background: #ff6b6b;
+}
+
+/* Checkout form */
+.form-group {
+    margin-bottom: 12px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    font-family: inherit;
+}
+
+.form-row {
+    display: flex;
+    gap: 10px;
+}
+
+.form-row .half {
+    flex: 1;
+}
+
+.payment-options {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 14px;
+}
+
+.checkout-total-text {
+    margin-top: 12px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.checkout-message {
+    margin-top: 10px;
+    font-size: 14px;
+    min-height: 18px;
+}
+
+/* Responsive for smaller screens */
+@media (max-width: 900px) {
+    .cart-layout {
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .mini-cart {
+        display: none; /* optional: hide floating mini cart on small screens */
+    }
+}
