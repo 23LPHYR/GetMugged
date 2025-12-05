@@ -1,11 +1,7 @@
-
 // Ensure login state exists
 if (localStorage.getItem("loggedIn") === null) {
     localStorage.setItem("loggedIn", "false");
 }
-
-
-
 
 function addToCart(name, price, img) {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -29,6 +25,8 @@ function displayCart() {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
     if (cart.length === 0) {
         container.innerHTML = `<p class="cart-empty">Your cart is empty.</p>`;
+        const totalSpan = document.getElementById("checkout-total");
+        if (totalSpan) totalSpan.textContent = "₹0";
         return;
     }
 
@@ -40,16 +38,22 @@ function displayCart() {
 
         container.innerHTML += `
         <div class="cart-item">
-        <img src="${item.img}">
-        <div class="cart-info">
-        <h3>${item.name} <span style="opacity:0.8;">x${item.quantity}</span></h3>
-        <p>₹${item.price * item.quantity}</p>
-        </div>
-        <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
+          <img src="${item.img}">
+          <div class="cart-info">
+            <h3>${item.name} <span style="opacity:0.8;">x${item.quantity}</span></h3>
+            <p>₹${item.price * item.quantity}</p>
+          </div>
+          <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
         </div>`;
     });
 
     container.innerHTML += `<h2 class="total">Total: ₹${total}</h2>`;
+
+    // Also update the checkout total on the right
+    const totalSpan = document.getElementById("checkout-total");
+    if (totalSpan) {
+        totalSpan.textContent = `₹${total}`;
+    }
 }
 
 function displayMiniCart() {
@@ -68,8 +72,8 @@ function displayMiniCart() {
     cart.forEach((item, index) => {
         mini.innerHTML += `
         <div class="mini-cart-item">
-        <p>${item.name} <span>x${item.quantity}</span></p>
-        <button class="mini-remove" onclick="removeItem(${index}); displayMiniCart();">x</button>
+          <p>${item.name} <span>x${item.quantity}</span></p>
+          <button class="mini-remove" onclick="removeItem(${index}); displayMiniCart();">x</button>
         </div>
         `;
     });
@@ -88,48 +92,68 @@ function removeItem(index) {
     displayMiniCart();
 }
 
-// ✅ Login requirement before checkout
-document.getElementById("checkout-btn")?.addEventListener("click", () => {
-    if (localStorage.getItem("loggedIn") !== "true") {
-        alert("Please login to continue checkout.");
-        window.location.href = "login.html";
-        return;
-    }
+// ✅ New: Proper checkout handling with form
+document.addEventListener("DOMContentLoaded", () => {
+    const checkoutForm = document.getElementById("checkout-form");
 
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    if (cart.length === 0) return;
+    if (!checkoutForm) return;
 
-    let total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    checkoutForm.addEventListener("submit", (e) => {
+        e.preventDefault();
 
-    const modal = document.createElement("div");
-    modal.className = "payment-modal";
-    modal.innerHTML = `
-    <div class="payment-box">
-    <h2>Checkout</h2>
-    <p>Total Amount: <strong>₹${total}</strong></p>
-    <button class="pay-now-btn">Pay Now</button>
-    <button class="close-pay-btn">Cancel</button>
-    </div>`;
-    document.body.appendChild(modal);
+        // Must be logged in
+        if (localStorage.getItem("loggedIn") !== "true") {
+            alert("Please login to continue checkout.");
+            window.location.href = "login.html";
+            return;
+        }
 
-    modal.querySelector(".pay-now-btn").addEventListener("click", () => {
-        modal.querySelector(".payment-box").innerHTML = `
-        <h2>Processing Payment...</h2><p>Please wait</p>`;
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        if (cart.length === 0) {
+            alert("Your cart is empty.");
+            return;
+        }
 
+        // Basic HTML5 validation
+        if (!checkoutForm.checkValidity()) {
+            checkoutForm.reportValidity();
+            return;
+        }
+
+        const messageEl = document.getElementById("checkout-message");
+        const placeOrderBtn = document.getElementById("place-order-btn");
+        if (messageEl) {
+            messageEl.textContent = "Processing your order...";
+        }
+        if (placeOrderBtn) {
+            placeOrderBtn.disabled = true;
+        }
+
+        // Fake processing delay
         setTimeout(() => {
-            modal.querySelector(".payment-box").innerHTML = `
-            <h2>✅ Payment Successful!</h2><p>Your mugs are on the way.</p>
-            <button class="close-pay-btn" id="final-close-btn">Close</button>`;
-
+            // Clear cart
             localStorage.removeItem("cart");
             displayCart();
             displayMiniCart();
 
-            document.getElementById("final-close-btn").onclick = () => modal.remove();
-        }, 2000);
-    });
+            if (messageEl) {
+                messageEl.textContent = "✅ Order placed successfully! Your mugs will be shipped soon.";
+            }
 
-    modal.querySelector(".close-pay-btn").onclick = () => modal.remove();
+            if (placeOrderBtn) {
+                placeOrderBtn.disabled = false;
+            }
+
+            // Optionally reset form
+            checkoutForm.reset();
+
+            // Reset total display
+            const totalSpan = document.getElementById("checkout-total");
+            if (totalSpan) {
+                totalSpan.textContent = "₹0";
+            }
+        }, 1500);
+    });
 });
 
 // ✅ Header Login / Logout UI
