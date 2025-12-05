@@ -3,6 +3,8 @@ if (localStorage.getItem("loggedIn") === null) {
     localStorage.setItem("loggedIn", "false");
 }
 
+// ---------------- CART + MINI-CART ----------------
+
 function addToCart(name, price, img) {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
@@ -92,17 +94,19 @@ function removeItem(index) {
     displayMiniCart();
 }
 
-// ✅ New: Proper checkout handling with form
+// ---------------- CHECKOUT PAGE (cart.html) ----------------
+
 document.addEventListener("DOMContentLoaded", () => {
     const checkoutForm = document.getElementById("checkout-form");
-
-    if (!checkoutForm) return;
+    if (!checkoutForm) return; // not on checkout page
 
     checkoutForm.addEventListener("submit", (e) => {
         e.preventDefault();
 
         // Must be logged in
         if (localStorage.getItem("loggedIn") !== "true") {
+            // mark that user came here from checkout
+            localStorage.setItem("redirectAfterLogin", "checkout");
             alert("Please login to continue checkout.");
             window.location.href = "login.html";
             return;
@@ -144,7 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 placeOrderBtn.disabled = false;
             }
 
-            // Optionally reset form
+            // Reset form
             checkoutForm.reset();
 
             // Reset total display
@@ -156,7 +160,51 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-// ✅ Header Login / Logout UI
+// ---------------- LOGIN PAGE (login.html) ----------------
+
+document.addEventListener("DOMContentLoaded", () => {
+    const loginForm = document.getElementById("login-form");
+    if (!loginForm) return; // not on login page
+
+    const usernameInput = document.getElementById("login-username");
+    const passwordInput = document.getElementById("login-password");
+    const messageEl = document.getElementById("login-message");
+
+    loginForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value.trim();
+
+        if (!username || !password) {
+            if (messageEl) {
+                messageEl.textContent = "Please enter both username and password.";
+            }
+            return;
+        }
+
+        // Fake login: store in localStorage
+        localStorage.setItem("loggedIn", "true");
+        localStorage.setItem("username", username);
+
+        if (messageEl) {
+            messageEl.textContent = "✅ Logged in successfully! Redirecting...";
+        }
+
+        setTimeout(() => {
+            // If user was forced to login from checkout, send them back there
+            if (localStorage.getItem("redirectAfterLogin") === "checkout") {
+                localStorage.removeItem("redirectAfterLogin");
+                window.location.href = "cart.html"; // checkout page
+            } else {
+                window.location.href = "index.html";
+            }
+        }, 600);
+    });
+});
+
+// ---------------- HEADER USER AREA ----------------
+
 function updateUserArea() {
     const userArea = document.getElementById("user-area");
     if (!userArea) return;
