@@ -126,6 +126,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const messageEl = document.getElementById("checkout-message");
         const placeOrderBtn = document.getElementById("place-order-btn");
+        const phoneInput = document.getElementById("phone");
+
+        // -------------- FAKE OTP FLOW --------------
+        // Generate a 6-digit OTP
+        const otp = Math.floor(100000 + Math.random() * 900000);
+
+        // Show OTP as if it was "sent" (for demo)
+        const phoneNumber = phoneInput ? phoneInput.value.trim() : "";
+        alert(`Demo OTP for ${phoneNumber || "your phone"} is: ${otp}`);
+
+        // Ask user to enter OTP
+        const userOtp = prompt("Enter the OTP you received to confirm your order:");
+
+        if (!userOtp) {
+            if (messageEl) {
+                messageEl.textContent = "❌ OTP verification cancelled.";
+            }
+            return;
+        }
+
+        if (String(userOtp) !== String(otp)) {
+            if (messageEl) {
+                messageEl.textContent = "❌ Invalid OTP. Please try again.";
+            }
+            return;
+        }
+        // -------------- END OTP FLOW --------------
+
         if (messageEl) {
             messageEl.textContent = "Processing your order...";
         }
