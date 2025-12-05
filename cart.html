@@ -7,28 +7,98 @@
 </head>
 <body class="cart-page-bg">
 
-
 <header>
   <h1 style="text-shadow: 1px 1px 0 black, -1px -1px 0 black,
                         1px -1px 0 black, -1px 1px 0 black;">GetMugged</h1>
- <nav>
-  <a href="index.html">Home</a>
-  <a href="products.html">Mugs</a>
-  <a href="cart.html">Cart</a>
-  <span id="user-area"></span>
-</nav>
-
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="products.html">Mugs</a>
+    <a href="cart.html">Cart</a>
+    <span id="user-area"></span>
+  </nav>
 </header>
 
 <h2 class="page-title" style="text-align:center; text-shadow: 1px 1px 0 black, -1px -1px 0 black,
-                        1px -1px 0 black, -1px 1px 0 black;"">Your Cart</h2>
+                        1px -1px 0 black, -1px 1px 0 black;">Checkout</h2>
 
-<div id="cart-container"></div>
+<main class="cart-layout">
+  
+  <!-- LEFT: Cart items -->
+  <section class="cart-section">
+    <h3 class="section-heading">Your Cart</h3>
+    <div id="cart-container"></div>
+  </section>
 
-<button id="checkout-btn" class="cta-btn" style="display: block; margin-left: auto; margin-right: auto;">Proceed to Pay</button>
+  <!-- RIGHT: Checkout form -->
+  <section class="checkout-section" id="checkout-section">
+    <h3 class="section-heading">Shipping & Payment</h3>
+
+    <form id="checkout-form">
+      <div class="form-group">
+        <label for="full-name">Full Name</label>
+        <input type="text" id="full-name" name="full-name" required>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email (for receipt)</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone" required>
+      </div>
+
+      <div class="form-group">
+        <label for="address">Address</label>
+        <textarea id="address" name="address" rows="3" required></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group half">
+          <label for="city">City</label>
+          <input type="text" id="city" name="city" required>
+        </div>
+        <div class="form-group half">
+          <label for="pincode">Pincode</label>
+          <input type="text" id="pincode" name="pincode" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Payment Method</label>
+        <div class="payment-options">
+          <label>
+            <input type="radio" name="payment-method" value="UPI" required>
+            UPI
+          </label>
+          <label>
+            <input type="radio" name="payment-method" value="Card">
+            Credit / Debit Card
+          </label>
+          <label>
+            <input type="radio" name="payment-method" value="COD">
+            Cash on Delivery
+          </label>
+        </div>
+      </div>
+
+      <p class="checkout-total-text">
+        Order Total: <span id="checkout-total">₹0</span>
+      </p>
+
+      <button type="submit" class="cta-btn" id="place-order-btn">
+        Place Order
+      </button>
+
+      <p id="checkout-message" class="checkout-message"></p>
+    </form>
+  </section>
+</main>
 
 <script src="script.js"></script>
 </body>
 </html>
+
 
 
