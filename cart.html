@@ -44,4 +44,60 @@
       </div>
 
       <div class="form-group">
-        <label for="phone">Phon
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone" required>
+      </div>
+
+      <div class="form-group">
+        <label for="address">Address</label>
+        <textarea id="address" name="address" rows="3" required></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group half">
+          <label for="city">City</label>
+          <input type="text" id="city" name="city" required>
+        </div>
+        <div class="form-group half">
+          <label for="pincode">Pincode</label>
+          <input type="text" id="pincode" name="pincode" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Payment Method</label>
+        <div class="payment-options" id="payment-options">
+          <label>
+            <input type="radio" name="payment-method" value="UPI" required>
+            UPI
+          </label>
+          <label>
+            <input type="radio" name="payment-method" value="Card">
+            Credit / Debit Card
+          </label>
+          <label>
+            <input type="radio" name="payment-method" value="COD">
+            Cash on Delivery
+          </label>
+        </div>
+      </div>
+
+      <p class="checkout-total-text">
+        Order Total: <span id="checkout-total">₹0</span>
+      </p>
+
+      <button type="submit" class="cta-btn" id="place-order-btn">
+        Place Order
+      </button>
+
+      <p id="checkout-message" class="checkout-message"></p>
+
+    </form>
+
+  </section>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
